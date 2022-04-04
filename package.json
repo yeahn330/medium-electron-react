@@ -1,6 +1,6 @@
 {
   "name": "removeKit",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "private": true,
   "main": "public/Main.js",
   "homepage": "./",
@@ -13,13 +13,15 @@
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "axios": "^0.21.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-electron-browser-view": "^3.0.0",
     "react-router-dom": "^5.2.1",
     "react-scripts": "4.0.3",
     "shell": "^0.8.4",
-    "typescript": "^4.1.2"
+    "typescript": "^4.1.2",
+    "web-vitals": "^2.1.0"
   },
   "build": {
     "appId": "removeKit",

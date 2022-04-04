@@ -4,6 +4,7 @@ import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import axios from 'axios';
 
 const useStyles = makeStyles({
   root: {
@@ -17,7 +18,8 @@ const useStyles = makeStyles({
   adminUrlOpen: {
     width: '90%',
     margin: '0 5%',
-    fontSize: '1rem'
+    fontSize: '1rem',
+    display: 'none',
   },
   });
 
@@ -25,15 +27,15 @@ export default function UrlMaker() {
 
   const classes = useStyles();
 
-  function addEventHandler_go(elem, eventType, handler) {
+  function addEventHandler_url(elem, eventType, handler) {
     if (elem.addEventListener)
         elem.addEventListener (eventType, handler, false);
     else if (elem.attachEvent)
         elem.attachEvent ('on' + eventType, handler); 
   }
 
-  addEventHandler_go(document, 'DOMContentLoaded', function() {
-    addEventHandler_go(document.getElementById("cloudNn"), 'change', function() {
+  addEventHandler_url(document, 'DOMContentLoaded', function() {
+    addEventHandler_url(document.getElementById("cloudNn"), 'change', function() {
       let cloudNnSiteurl;
       let cloudNumSp;
 
@@ -55,17 +57,20 @@ export default function UrlMaker() {
 
       adminUrlOpen.value = sccUrl;
 
-      addEventHandler_go(document.getElementById("urlClick"), 'click', function() {
-        //let adminUrlOpen = document.getElementById('adminUrlOpen')
-  
-        ///여기여기\
-        window.shell.openExternal(sccUrl)
-  
+      addEventHandler_url(document.getElementById("urlClick"), 'click', function() {
+        window.shell.openExternal(sccUrl);
+        window.location.reload();
       });
 
     });
 
-    
+    addEventHandler_url(document.getElementById("domsClick"), 'click', function() {
+      axios({
+        url: 'http://127.0.0.1:5000/domsAutoLogin',
+        method: 'get'
+      });
+
+    });
   });
 
   return (
@@ -96,6 +101,15 @@ export default function UrlMaker() {
         className={classes.cloudNn}
       >
       ### &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 관리자페이지 URL 이동 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;###
+      </Button>
+      <Box my={1}></Box>
+      <Button 
+        id="domsClick"
+        variant="contained" 
+        color="primary"
+        className={classes.cloudNn}
+      >
+      ### &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 돔스 자동로그인 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;### 추가예정
       </Button>
       
     </div>

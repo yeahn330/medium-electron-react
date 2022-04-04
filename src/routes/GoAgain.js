@@ -1,6 +1,3 @@
-import { useState } from 'react';
-import axios from 'axios';
-
 import { makeStyles } from '@material-ui/core/styles';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Box from '@material-ui/core/Box';
@@ -8,36 +5,31 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
+import { useState } from 'react';
+import axios from 'axios';
+
 const useStyles = makeStyles({
   root: {
     flexGrow: 1,
   },
-  zensInputInfo: {
+  goAgainReg: {
     width: '90%',
     margin: '0 5%',
     fontSize: '1rem'
   },
-  taskInputInfo: {
+  goAgainRegView: {
     width: '90%',
     margin: '0 5%',
     fontSize: '1rem'
-  },
-  taskContent: {
-    width: '90%',
-    margin: '0 5%',
-    fontSize: '1rem'
-  },
-  taskTitle: {
-    width: '90%',
-    margin: '0 5%',
-    fontSize: '1rem',
-    display: 'none',
   },
   });
+
   let elem3=""
 
-export default function Task() {
+export default function GoAgin() {
+  
   const classes = useStyles();
+  const parseLines = (value) => value.replace(/(\\n)/g, "\n");
 
   function addEventHandler_task(elem, eventType, handler) {
     if (elem.addEventListener){
@@ -60,16 +52,15 @@ export default function Task() {
   const fetchZens = async () => {
     let issueNum = document.getElementById('issueNum');
   
-    let taskTitle = document.getElementById('taskTitle')
-    let taskContent = document.getElementById('taskContent')
-    let taskInputInfo = document.getElementById('taskInputInfo')
+    let goAgainReg = document.getElementById('goAgainReg')
+    let goAgainRegView = document.getElementById('goAgainRegView')
 
     setLoading(true);
     await axios.get("http://139.150.73.246:5000/zens?issueNum="+issueNum.value)
       .then(response => { //데이터는 response.data 안에 들어있다.
 
-        const zens = response.data.ticket;              
-        taskTitle.value = "#"+issueNum.value+" / "+zens.custom_fields[9].value+"/null";
+        const zens = response.data.ticket;
+        goAgainReg.value = "#"+issueNum.value+" / "+zens.custom_fields[9].value+"/null";
         let cloudNm = "null"
 
         if(zens.custom_fields[10].value === "서비스형"){
@@ -85,13 +76,14 @@ export default function Task() {
           call = zens.custom_fields[14].value
         }
 
-        taskContent.value = "[전화]["+zens.custom_fields[13].value+"] "+zens.custom_fields[1].value+"관련 빠른연락 요청\n"
+        goAgainReg.value = "[전화] ["+zens.custom_fields[13].value+"] "+zens.custom_fields[1].value+"관련 빠른연락 요청\n"
         
-        taskInputInfo.value = "안녕하세요, 고객지원팀 안영은 입니다.\n하기 사항 확인 부탁드립니다.\n\n1. 고객 정보 :"+zens.custom_fields[13].value+" / "+cloudNm+" / "
+        let goAgainRegView = document.getElementById('goAgainRegView')
+        .value = "1. 고객 정보 :"+zens.custom_fields[13].value+" / "+cloudNm+" / "
         +call+"(성함쓰세요) / #"+issueNum.value+"("+zens.custom_fields[19].value+")\n"
         + "2. 요청 내용 :"+zens.custom_fields[1].value+"관련 빠른연락 요청\n"
         + "3. 요청 사유 :"+zens.raw_subject+"관련 빠른연락 부탁드립니다.\n"
-        + "4. 추가 정보 : -\n\n감사합니다."
+        + "4. 추가 정보 : -"
 
       });
       setLoading(false);
@@ -115,7 +107,7 @@ export default function Task() {
 
       let taskInputInfo = document.getElementById('taskInputInfo')
 
-      taskInputInfo.value = "안녕하세요, 고객지원팀 안영은 입니다.\n\n1. 고객 정보 :"+taskTitle2[0]+" / "+taskTitle2[1]+" / "
+      taskInputInfo.value = "1. 고객 정보 :"+taskTitle2[0]+" / "+taskTitle2[1]+" / "
       +taskInfo[1]+"("+taskInfo[2]+") / "+taskInfo[0]+"(미할당)\n"
       + "2. 요청 내용 :"+taskTitle2[2]+"\n"
       + "3. 요청 사유 :"+taskTitle2[2]+" 부탁드립니다.\n"
@@ -126,9 +118,9 @@ export default function Task() {
 
   return (
     <div>
-      <Box className={classes.taskInputInfo}>
+      <Box className={classes.goAgainReg} my={1}>
       <Typography variant="h5">
-        &lt; 설치형 전달 &gt;
+        &lt; GO 이슈 생성기 &gt;
       </Typography>
       </Box>
       <Box my={2}></Box>
@@ -149,38 +141,18 @@ export default function Task() {
       </Box>
 
       <TextareaAutosize
-        id="taskTitle"
-        className={classes.taskTitle}
-        minRows={2}
-        placeholder="문의번호/연락처/담당자"
-        defaultValue="#11268/063-260-7938/이다빈"
+        id="goAgainReg"
+        className={classes.goAgainReg}
+        minRows={3}
+        defaultValue="[클라우드/회사명] 문의문의문의문의문의문의"
       />
 
       <TextareaAutosize
-        id="taskTitle"
-        className={classes.taskTitle}
-        minRows={2}
-        placeholder="문의번호/연락처/담당자"
-        defaultValue="#11268/063-260-7938/이다빈"
+        id="goAgainRegView"
+        className={classes.goAgainRegView}
+        minRows={15}
+        defaultValue={parseLines("[문제현상]\n1. 문의문의문의문의문의문의\n\n[테스트]\n1.테스트 불가\n1.스테이징 서버에서 확인가능\n\n[고객 요청사항]\n\n\n[첨부파일 복사]\n1. 현상 이미지파일 첨부\n\n[기타정보]\n-")}
       />
-
-      <TextareaAutosize
-        id="taskContent"
-        className={classes.taskContent}
-        minRows={2}
-        defaultValue="[전화] [미래엔] 업그레이드관련 빠른연락 요청"/>
-
-      <TextareaAutosize
-        id="taskInputInfo"
-        className={classes.taskInputInfo}
-        aria-label="minimum height"
-        minRows={6}
-        placeholder="1. 고객 정보 :고객사 / 설치형 / 연락처쓰세요(성함쓰세요) / #35298(업데이트_재분배_요청)
-2. 요청 내용 :업그레이드관련 빠른연락 요청
-3. 요청 사유 :[미래엔] 그룹웨어 3.4.6.0 업그레이드 작업관련 빠른연락 부탁드립니다.
-4. 추가 정보 : -"
-      />
-
     </div>
   );
 }
